@@ -1,5 +1,5 @@
 resource "azurerm_storage_account" "appcode" {
-  name                     = "myappcodewozniak1234"
+  name                     = "${var.name}${var.environment}storage"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
@@ -7,7 +7,7 @@ resource "azurerm_storage_account" "appcode" {
 }
 
 resource "azurerm_log_analytics_workspace" "laworkspace" {
-  name                = "myapplaworkspace"
+  name                = "${var.name}${var.environment}workspace"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   sku                 = "PerGB2018"
@@ -15,7 +15,7 @@ resource "azurerm_log_analytics_workspace" "laworkspace" {
 }
 
 resource "azurerm_application_insights" "application_insights" {
-  name                = "myapp-application-insights"
+  name                = "${var.name}${var.environment}appinsights"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   application_type    = "other"
@@ -24,7 +24,7 @@ resource "azurerm_application_insights" "application_insights" {
 
 
 resource "azurerm_service_plan" "app_service_plan" {
-  name                = "myapp-app-service-plan"
+  name                = "${var.name}${var.environment}serviceplan"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   os_type             = "Linux"
@@ -32,7 +32,7 @@ resource "azurerm_service_plan" "app_service_plan" {
 }
 
 resource "azurerm_linux_function_app" "function_app" {
-  name                       = "myapp-function-app"
+  name                       = "${var.name}${var.environment}app"
   resource_group_name        = azurerm_resource_group.rg.name
   location                   = azurerm_resource_group.rg.location
 
@@ -46,6 +46,16 @@ resource "azurerm_linux_function_app" "function_app" {
     "FUNCTIONS_WORKER_RUNTIME" = "python",
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.application_insights.instrumentation_key,
     "AzureWebJobsFeatureFlags" = "EnableWorkerIndexing"
+
+    "ENV_PHOTOS_CONTAINER_URL" = azurerm_storage_account.photos.primary_blob_endpoint
+    "ENV_PHOTOS_CONTAINER_NAME" = azurerm_storage_container.photos.name
+    "ENV_PHOTOS_TABLE_URL" = azurerm_storage_account.photos.primary_table_endpoint
+    "ENV_PHOTOS_TABLE_NAME" = azurerm_storage_table.photos.name
+    "ENV_PHOTOS_QUEUE_URL" = azurerm_storage_account.photos.primary_queue_endpoint
+    "ENV_PHOTOS_QUEUE_NAME" = azurerm_storage_queue.photoqueue.name
+    "ENV_PHOTOS_PRIMARY_KEY" = azurerm_storage_account.photos.primary_access_key
+    "ENV_PHOTOS_ACCOUNT_NAME" = azurerm_storage_account.photos.name
+    "ENV_PHOTOS_CONNSTR" = azurerm_storage_account.photos.primary_connection_string
   }
 
   site_config {
@@ -61,3 +71,4 @@ resource "azurerm_linux_function_app" "function_app" {
     ]
   }
 }
+

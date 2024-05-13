@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-myapp-sdc-dev-001"
-  location = "Sweden Central"
+  name     = "rg-${var.name}${var.environment}-001"
+  location = var.location
 
   tags = {
     contact = "Jakub Wozniak"
