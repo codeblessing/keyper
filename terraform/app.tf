@@ -56,6 +56,10 @@ resource "azurerm_linux_function_app" "function_app" {
     "ENV_PHOTOS_PRIMARY_KEY" = azurerm_storage_account.photos.primary_access_key
     "ENV_PHOTOS_ACCOUNT_NAME" = azurerm_storage_account.photos.name
     "ENV_PHOTOS_CONNSTR" = azurerm_storage_account.photos.primary_connection_string
+
+    "ENV_COGNITIVE_URL" = azurerm_cognitive_account.cognitive.endpoint
+    "ENV_COGNITIVE_KEY" = azurerm_cognitive_account.cognitive.primary_access_key
+
   }
 
   site_config {
