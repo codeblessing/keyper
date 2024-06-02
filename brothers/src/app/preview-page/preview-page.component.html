@@ -1,0 +1,13 @@
+<section [style.width]="space.width" [style.height]="space.height">
+    @if (header_message !== null) {
+        <h2 class="header" [style.--header-color]="header_color">{{header_message}}</h2>
+    }
+    <canvas #canvas [width]="canvas_space.width" [height]="canvas_space.height">
+    </canvas>
+    <p-dialog [header]="retry_dialog_title" closable="false" [modal]="true" [visible]="show_retry_dialog" [style]="{ width: '25rem' }">
+        <div class="flex gap-2">
+            <p-button label="Cancel" severity="secondary" (click)="cancel()" />
+            <p-button label="Retry" autofocus="true" (click)="retry()" />
+        </div>
+    </p-dialog>
+</section>

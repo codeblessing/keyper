@@ -1,0 +1,12 @@
+[tool.yapf]
+based_on_style = "pep8"
+indent_width = 4
+column_limit = 130
+spaces_around_default_or_named_assign = true
+spaces_around_dict_delimiters = true
+spaces_around_power_operator = true
+dedent_closing_brackets = true
+each_dict_entry_on_separate_line = true
+force_multiline_dict = true
+align_closing_bracket_with_visual_indent = true
+split_arguments_when_comma_terminated = true
