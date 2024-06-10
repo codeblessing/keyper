@@ -41,6 +41,7 @@ def generate_sas_token(image_name: str):
     return f"{blob_client.url}?{token}"
 
 
+@app.function_name("postentities")
 @app.route(route = "entities", trigger_arg_name = 'request', methods = ["POST"])
 def post(request: HttpRequest) -> HttpResponse:
     try:
@@ -117,7 +118,7 @@ def post(request: HttpRequest) -> HttpResponse:
     )
 
 
-@app.function_name("process")
+@app.function_name("processentities")
 @app.queue_trigger(
     queue_name = config.photos.queue.name,
     connection = "KEYPER_PHOTOS_CONNECTION_STRING",
@@ -212,7 +213,7 @@ def process(message: QueueMessage) -> None:
     return None
 
 
-@app.function_name(name = "get-entity")
+@app.function_name(name = "getentity")
 @app.route(route = "entities/{id}", methods = ["GET"], trigger_arg_name = "request")
 def get_entity(request: HttpRequest) -> HttpResponse:
     try:
@@ -249,26 +250,24 @@ def get_entity(request: HttpRequest) -> HttpResponse:
         },
     )
 
+    # @app.function_name(name = "debug-upload-image")
+    # @app.route(route = "debug/entities/", methods = ["POST"], trigger_arg_name = "request")
+    # def debug_upload_image(request: HttpRequest):
+    #     hash_id = str(uuid.uuid4())
 
-@app.function_name(name = "debug-upload-image")
-@app.route(route = "debug/entities/", methods = ["POST"], trigger_arg_name = "request")
-def debug_upload_image(request: HttpRequest):
-    hash_id = str(uuid.uuid4())
+    #     entity = {
+    #         "id": hash_id,
+    #         "status": "uploaded",
+    #         "results": None
+    #     }
 
-    entity = {
-        "id": hash_id,
-        "status": "uploaded",
-        "results": None
-    }
+    #     return HttpResponse(json.dumps(entity), status_code = 201, headers = {
+    #         "Content-Type": "application/json"
+    #     })
 
-    return HttpResponse(json.dumps(entity), status_code = 201, headers = {
-        "Content-Type": "application/json"
-    })
-
-
-@app.function_name(name = "debug-get-entity")
-@app.route(route = "debug/entities/{id}", methods = ["GET"], trigger_arg_name = "request")
-def debug_get_entity(request: HttpRequest) -> HttpResponse:
+    # @app.function_name(name = "debug-get-entity")
+    # @app.route(route = "debug/entities/{id}", methods = ["GET"], trigger_arg_name = "request")
+    # def debug_get_entity(request: HttpRequest) -> HttpResponse:
     id = request.route_params.get("id")
     if id is None:
         return HttpResponse(
